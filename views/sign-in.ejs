@@ -1,0 +1,16 @@
+<main class="contenedor contenedor-formularios">
+    <h1><%= pageName %></h1>
+    <form action="/sign-in" method="POST" class="default-form">
+        <div class="campo">
+            <label>Email</label>
+            <input type="email" name="email" placeholder="Your email">
+        </div>
+        <div class="campo">
+            <label>Password</label>
+            <input type="password" name="password" placeholder="Your password">
+        </div>
+        <div class="campo enviar">
+            <input type="submit" class="btn btn-rosa" value="sign in">
+        </div>
+    </form>
+</main>
