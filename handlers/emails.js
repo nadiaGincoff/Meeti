@@ -9,7 +9,7 @@ let transport = nodemailer.createTransport({
     port: emailConfig.port,
     auth: {
         user: emailConfig.user,
-        pass: emailConfig.pass
+        pass: emailConfig.pass,
     }
 })
 
@@ -17,7 +17,7 @@ exports.sendEmail = async (options) => {
     console.log(options)
     
     // read file for email
-    const file = __dirname + `../views/${options.file}.ejs`
+    const file = __dirname + `/../views/emails/${options.file}.ejs`
 
     // compiled
     const compiled = ejs.compile(fs.readFileSync(file, 'utf8'))
@@ -25,4 +25,16 @@ exports.sendEmail = async (options) => {
     // create HTML
     const html = compiled({ url: options.url })
 
+    // config email options
+    const emailOptions = {
+        from: 'Meeti <noreply@meeti.com',
+        to: options.user.email,
+        subject: options.subject,
+        html, 
+    }
+
+    // send email
+    const sendEmailUtil = util.promisify(transport.sendMail, transport)
+
+    return sendEmailUtil.call(transport, emailOptions)
 }
