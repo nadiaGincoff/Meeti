@@ -15,8 +15,7 @@ exports.createAccount = async (req, res) => {
 
     // read express error
     const expressErrors = req.validationErrors();
-
-    console.log(expressErrors)
+    // console.log(expressErrors)
 
     try {
         await Users.create(user)
@@ -28,13 +27,14 @@ exports.createAccount = async (req, res) => {
         await sendEmail.sendEmail({
             user,
             url,
-            subject: 'confirm your Meeti account',
+            subject: 'Confirm your Meeti account',
             file: 'confirm-account'
         }),
 
-        req.flash('exito', 'Hemos enviado un e-mail, confirma tu cuenta');
+        req.flash('exito', 'We have sent an e-mail, confirm your account');
         res.redirect('/sign-in')
     } catch (error) {
+        console.log(error)
         // extract error message
         const sequelizeErrors = error.errors.map(error => error.message)
 
@@ -54,4 +54,24 @@ exports.formSignIn = (req, res) => {
     res.render("sign-in", {
         pageName: "Sign in"
     });
+}
+
+// confirm user subscription
+exports.confirmAccount = async (req, res, next) => {
+    // verify if user exist
+    const user = await Users.findOne({ where: { email: req.params.mail }})
+    console.log(req.params.mail)
+
+    // if dont exist , redirect
+    if (!user) {
+        req.flash('error', 'This account doesnt exist')
+        res.redirect('/create-account')
+        return next(); // detiene la ejectucion del middleware, se fuerza a finalizar
+    }
+
+    // if exist, confirm subscription and redirect
+    user.active = 1;
+    await user.save();
+    req.flash('exito', 'this account has been confirmed')
+    res.redirect('/sign-in')
 }

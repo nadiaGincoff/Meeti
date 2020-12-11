@@ -7,11 +7,12 @@ const usersController = require("../controllers/usersController");
 module.exports = function () {
   router.get("/", homeController.home);
 
-  // Create account
+  // Create and confirm account
   router.get("/create-account", usersController.formCreateAccount);
   router.post("/create-account", usersController.createAccount);
+  router.get("/confirm-account/:mail", usersController.confirmAccount);
 
   // Sign in
-  router.get('/sign-in', usersController.formSignIn)
+  router.get('/sign-in', usersController.formSignIn);
   return router;
 };
