@@ -1,4 +1,4 @@
-const nodemailer= require('nodemailer')
+const nodemailer = require('nodemailer')
 const emailConfig = require('../config/emails')
 const fs = require('fs')
 const util = require('util')

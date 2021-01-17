@@ -1,16 +1,20 @@
 const express = require("express");
 const expressEjsLayouts = require("express-ejs-layouts");
 const path = require("path");
-const router = require("./routes");
 const bodyParser = require("body-parser");
 const flash = require("connect-flash");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const expressValidator = require("express-validator");
+const passport = require('./config/passport')
+const router = require("./routes");
 
 // Configuracion y Modelos de DB
 const db = require("./config/db");
+
 require("./models/Users");
+require("./models/Categories");
+require("./models/Groups");
 db.sync()
   .then(() => console.log("DB connected"))
   .catch((error) => console.log(error));
@@ -50,6 +54,10 @@ app.use(
     saveUninitialized: false,
   })
 );
+
+// Init passport
+app.use(passport.initialize())
+app.use(passport.session())
 
 // Agrega flash messages
 app.use(flash());
